@@ -1,26 +1,36 @@
 BIN	=	crack
 
-SRC	=	src/main.cpp
-
+SRC	=	src/main.cpp				\
+		src/Cracker.cpp				\
+		src/AttackBruteforce.cpp	\
+		src/AttackDictionary.cpp	\
+		src/Hash.cpp				\
+		src/Logger.cpp				\
+		src/Color.cpp				
 OBJ	=	$(SRC:.cpp=.o)
 
 INC	=	-I include
+LIB	=	-lcrypto
 
-CC			=	g++
-CXXFLAGS	=	-g $(INC)
+CXXFLAGS	=	-g -W
+CC			=	g++ $(CXXFLAGS)
 RM			=	rm -rf
 
+# Extra rules
 all:	$(BIN)
-
-$(BIN):	$(OBJ)
-	$(CC) $(OBJ) -o $(BIN)
 
 clean:
 	$(RM) $(OBJ)
-
 fclean:	clean
 	$(RM) $(BIN)
-
 re: fclean all
 
 .PHONY:	$(BIN)
+
+# Linking
+$(BIN):	$(OBJ)
+	$(CC) $^ $(INC) $(LIB) -o $@
+
+# Compilation
+%.o:	%.cpp
+	$(CC) -c $< $(INC) -o $@
