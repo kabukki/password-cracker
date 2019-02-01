@@ -30,9 +30,8 @@ int main(int argc, char **argv)
 
 			cracker.addAttack(std::make_shared<AttackDictionary>("mots-8-et-moins.txt"));
 			cracker.addAttack(std::make_shared<AttackBruteforce>());
-			cracker.crack(digest);
 
-			return EXIT_SUCCESS;
+			return cracker.crack(digest) ? EXIT_SUCCESS : EXIT_FAILURE;
 		}
 	}
 }

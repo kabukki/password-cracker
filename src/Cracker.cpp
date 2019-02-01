@@ -18,11 +18,11 @@ std::string	Cracker::strategyToString() const
 	return strategy;
 }
 
-void	Cracker::crack(const Hash::md5digest &digest)
+bool	Cracker::crack(const Hash::md5digest &digest)
 {
 	if (_strategy.empty()) {
 		_logger.warn("No strategy specified to crack password. Aborting");
-		return;
+		return false;
 	}
 	
 	std::cout
@@ -35,13 +35,16 @@ void	Cracker::crack(const Hash::md5digest &digest)
 		std::cout << "Using attack: " << Color::BOLD << Color::FG_YELLOW << attack->name() << Color::RESET << std::endl;
 		results = attack->crack(digest);
 		if (results.success == true) {
-			_logger.success("Found password " + *(results.password) + " after " + std::to_string(results.attempts) + " attempts");
-			return;
+			std::cout << Logger::SUCCESS
+				<< "Found password " << Color::BOLD << *(results.password) << Color::RESET
+				<< " after " << results.attempts << " attempts" << std::endl;
+			return true;
 		} else {
 			_logger.warn("Could not find password using " + attack->name() + " attack.");
 		}
 	}
 	_logger.error("Unable to crack digest.");
+	return false;
 }
 
 void	Cracker::addAttack(std::shared_ptr<IAttack> attack)

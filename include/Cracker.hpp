@@ -18,7 +18,7 @@ public:
 	Cracker();
 	~Cracker();
 
-	void		crack(const Hash::md5digest &digest);
+	bool		crack(const Hash::md5digest &digest);
 	void		addAttack(std::shared_ptr<IAttack> attack);
 };
 
