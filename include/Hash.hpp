@@ -15,6 +15,7 @@ public:
 	static void	md5(const std::string &message, Hash::md5digest &digest);
 	static void translate(const std::string &str, Hash::md5digest &digest);
 	static bool	compareDigests(const Hash::md5digest &a, const Hash::md5digest &b);
+	static bool check(const std::string &password, const Hash::md5digest &digest);
 };
 
 std::ostream & operator<<(std::ostream &os, const Hash::md5digest &digest);

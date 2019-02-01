@@ -11,8 +11,6 @@ private:
 	Logger				_logger;
 	const std::string	_dictionaryPath;
 
-	bool				check(const std::string &password, const Hash::md5digest &digest);
-
 public:
 	AttackDictionary(const std::string &dictionaryPath);
 	~AttackDictionary();

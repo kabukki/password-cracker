@@ -7,6 +7,9 @@
 Hash::Hash () {}
 Hash::~Hash () {}
 
+/**
+ * Hash a plain string to a digest
+ */
 void	Hash::md5(const std::string &message, Hash::md5digest &digest)
 {
 	MD5((const unsigned char *)message.c_str(), message.length(), digest);
@@ -23,6 +26,9 @@ void	Hash::translate(const std::string &str, Hash::md5digest &digest)
 	}
 }
 
+/**
+ * Compares to digests and returns whether they are the same
+ */
 bool	Hash::compareDigests(const Hash::md5digest &a, const Hash::md5digest &b)
 {
 	for (size_t n = 0; n < MD5_DIGEST_LENGTH; n++) {
@@ -31,6 +37,17 @@ bool	Hash::compareDigests(const Hash::md5digest &a, const Hash::md5digest &b)
 		}
 	}
 	return true;
+}
+
+/**
+ * Compare a plain string against a digest. First hases the string, then compares the digests.
+ */
+bool	Hash::check(const std::string &password, const Hash::md5digest &digest)
+{
+	Hash::md5digest	passwordDigest;
+
+	Hash::md5(password, passwordDigest);
+	return Hash::compareDigests(digest, passwordDigest);
 }
 
 std::ostream & operator<<(std::ostream &os, const Hash::md5digest &digest)

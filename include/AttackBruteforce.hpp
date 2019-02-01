@@ -9,6 +9,8 @@ class AttackBruteforce : public IAttack
 private:
 	const std::string	_name;
 	Logger				_logger;
+	const std::string	_characterSet;
+	const unsigned int	_maxLength;
 
 public:
 	AttackBruteforce();
