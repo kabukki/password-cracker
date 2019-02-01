@@ -1,6 +1,9 @@
 #include <iostream>
 #include <string>
+#include "AttackDictionary.hpp"
+#include "AttackBruteforce.hpp"
 #include "Cracker.hpp"
+#include "Logger.hpp"
 #include "Hash.hpp"
 
 void usage(const std::string &binary)
@@ -14,14 +17,22 @@ int main(int argc, char **argv)
 		usage(argv[0]);
 		return EXIT_FAILURE;
 	} else {
-		std::string digest(argv[1]);
-		Cracker cracker;
+		Logger logger(std::cout);
+		std::string str(argv[1]);
 
-		cracker.crack(digest);
+		if (str.length() != MD5_DIGEST_LENGTH * 2) {
+			logger.error("MD5 digest is invalid.");
+			return EXIT_FAILURE;
+		} else {
+			Cracker cracker;
+			Hash::md5digest digest;
+			Hash::translate(str, digest);
 
-		// Hash::md5digest digest;
-		// Hash::md5(std::string("coucou"), digest);
-		// std::cout << digest << std::endl;
-		return EXIT_SUCCESS;
+			cracker.addAttack(std::make_shared<AttackDictionary>("mots-8-et-moins.txt"));
+			cracker.addAttack(std::make_shared<AttackBruteforce>());
+			cracker.crack(digest);
+
+			return EXIT_SUCCESS;
+		}
 	}
 }

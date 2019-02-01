@@ -1,28 +1,45 @@
 #include <iostream>
 #include <fstream>
 #include "AttackDictionary.hpp"
+#include "Hash.hpp"
 
-AttackDictionary::AttackDictionary()
-	: _name("Dictionary"), _logger(Logger(std::cout))
+AttackDictionary::AttackDictionary(const std::string &dictionaryPath)
+	: _name("Dictionary"),
+	_logger(Logger(std::cout)),
+	_dictionaryPath(dictionaryPath)
 {}
 AttackDictionary::~AttackDictionary() {}
 
-std::string&	AttackDictionary::crack(const std::string &digest)
+bool	AttackDictionary::check(const std::string &password, const Hash::md5digest &digest)
 {
-	const std::string path("mots-8-et-moins.txt");
+	Hash::md5digest	passwordDigest;
+
+	Hash::md5(password, passwordDigest);
+	return Hash::compareDigests(digest, passwordDigest);
+}
+
+IAttack::results	AttackDictionary::crack(const Hash::md5digest &digest)
+{
+	const std::string path(_dictionaryPath);
 	std::ifstream dictionary(path);
+	IAttack::results results { false, nullptr, 0 };
 
 	if (dictionary.is_open()) {
-		std::string line;
-		size_t n = 0;
-		while (std::getline(dictionary, line)) {
-			n++;
+		std::string password;
+
+		while (std::getline(dictionary, password)) {
+			results.attempts++;
+			if (check(password, digest)) {
+				results.success = true;
+				results.password = std::make_unique<std::string>(password);
+				break;
+			}
 		}
-		std::cout << "Read " << n << " entries" << std::endl;
 		dictionary.close();
 	} else {
 		_logger.error("Could not open config file (" + path + ")");
 	}
+	return results;
 }
 
 const std::string&	AttackDictionary::name()

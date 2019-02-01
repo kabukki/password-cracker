@@ -2,11 +2,19 @@
 #define IATTACK_HPP
 
 #include <string>
+#include <memory>
+#include "Hash.hpp"
 
 class IAttack
 {
 public:
-	virtual std::string&		crack(const std::string &digest) = 0;
+	struct results {
+		bool							success;
+		std::unique_ptr<std::string>	password;
+		unsigned int					attempts;
+	};
+
+	virtual IAttack::results	crack(const Hash::md5digest &digest) = 0;
 	virtual const std::string&	name() = 0;
 };
 

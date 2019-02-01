@@ -9,12 +9,15 @@ class AttackDictionary : public IAttack
 private:
 	const std::string	_name;
 	Logger				_logger;
+	const std::string	_dictionaryPath;
+
+	bool				check(const std::string &password, const Hash::md5digest &digest);
 
 public:
-	AttackDictionary();
+	AttackDictionary(const std::string &dictionaryPath);
 	~AttackDictionary();
 	
-	std::string&		crack(const std::string &digest);
+	IAttack::results	crack(const Hash::md5digest &digest);
 	const std::string&	name();
 };
 
