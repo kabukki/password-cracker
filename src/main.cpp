@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 			Hash::md5digest digest;
 			Hash::translate(str, digest);
 
-			cracker.addAttack(std::make_shared<AttackDictionary>("mots-8-et-moins.txt"));
+			// cracker.addAttack(std::make_shared<AttackDictionary>("mots-8-et-moins.txt"));
 			cracker.addAttack(std::make_shared<AttackBruteforce>("abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*", 5));
 
 			return cracker.crack(digest) ? EXIT_SUCCESS : EXIT_FAILURE;

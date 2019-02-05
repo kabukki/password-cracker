@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <cmath>
+#include <omp.h>
 #include "AttackBruteforce.hpp"
 
 AttackBruteforce::AttackBruteforce(const std::string &characterSet, const unsigned int maxLength)
@@ -10,12 +12,13 @@ AttackBruteforce::~AttackBruteforce () {}
 
 IAttack::results	AttackBruteforce::crack(const Hash::md5digest &digest, const size_t length)
 {
-	int 				setLength = static_cast<int>(_characterSet.length());
-	IAttack::results	results { false, nullptr, 0 };
-	std::string			password(length, 0);
-	std::vector<int>	indices(length, 0);
+	unsigned int				setLength = static_cast<int>(_characterSet.length());
+	unsigned int				combinations = std::pow(setLength, length);
+	IAttack::results			results { false, nullptr, 0 };
+	std::string					password(length, 0);
+	std::vector<unsigned int>	indices(length, 0);
 
-	while (indices[0] < setLength) {
+	for (unsigned int x = 0; x < combinations; x++) {
 		std::transform(
 			indices.begin(), indices.end(), password.begin(),
 			[this](int index) -> char { return _characterSet[index]; }
