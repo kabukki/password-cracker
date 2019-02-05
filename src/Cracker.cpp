@@ -1,5 +1,5 @@
 #include <iostream>
-#include <algorithm>
+#include <chrono>
 #include "Cracker.hpp"
 #include "Color.hpp"
 
@@ -28,16 +28,23 @@ bool	Cracker::crack(const Hash::md5digest &digest)
 	_logger << Logger::NEUTRAL << "Attempting to crack digest: " << Color::FG_YELLOW << digest << Color::RESET << std::endl;
 	_logger << Logger::NEUTRAL << "Strategy is to use: " << strategyToString() << "." << std::endl;
 
+	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point end;
+
 	for (auto& attack : _strategy) {
 		IAttack::results results;
 
 		_logger << Logger::NEUTRAL << "Using attack: " << Color::FG_YELLOW << attack->name() << Color::RESET << std::endl;
 		attack->describe();
-
 		results = attack->crack(digest);
+
 		if (results.success == true) {
+			end = std::chrono::steady_clock::now();
+			auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+
 			_logger << Logger::SUCCESS
 				<< "Found password " << Color::BOLD << *(results.password) << Color::RESET
+				<< " in " << time << "ms"
 				<< " after " << results.attempts << " attempts" << std::endl;
 			return true;
 		} else {
