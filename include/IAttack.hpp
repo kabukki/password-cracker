@@ -16,6 +16,7 @@ public:
 
 	virtual IAttack::results	crack(const Hash::md5digest &digest) = 0;
 	virtual const std::string&	name() = 0;
+	virtual void				describe() = 0;
 };
 
 #endif

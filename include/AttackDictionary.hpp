@@ -17,6 +17,7 @@ public:
 	
 	IAttack::results	crack(const Hash::md5digest &digest);
 	const std::string&	name();
+	void				describe();
 };
 
 #endif

@@ -16,8 +16,10 @@ public:
 	AttackBruteforce();
 	~AttackBruteforce();
 	
+	IAttack::results	crack(const Hash::md5digest &digest, const size_t length);
 	IAttack::results	crack(const Hash::md5digest &digest);
 	const std::string&	name();
+	void				describe();
 };
 
 #endif

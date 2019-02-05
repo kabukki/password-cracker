@@ -1,38 +1,62 @@
+#include <iomanip>
 #include "Logger.hpp"
 #include "Color.hpp"
 
-Logger::Logger(std::ostream &out)
-	: _out(out)
+Logger::Logger(std::ostream &out, const std::string &name)
+	: _out(out), _name(name)
 {}
 Logger::~Logger() {}
 
+void Logger::log(const std::string &message)
+{
+	*this << Logger::NEUTRAL << message << std::endl;
+}
+
 void Logger::success(const std::string &message)
 {
-	_out << Logger::SUCCESS << message << std::endl;
+	*this << Logger::SUCCESS << message << std::endl;
 }
 
 void Logger::warn(const std::string &message)
 {
-	_out << Logger::WARNING << message << std::endl;
+	*this << Logger::WARNING << message << std::endl;
 }
 
 void Logger::error(const std::string &message)
 {
-	_out << Logger::ERROR << message << std::endl;
+	*this << Logger::ERROR << message << std::endl;
 }
 
-std::ostream & operator<<(std::ostream & os, const Logger::symbol & symbol)
+std::ostream&		Logger::out() const
+{
+	return _out;
+}
+
+const std::string&	Logger::name() const
+{
+	return _name;
+}
+
+std::ostream & operator<<(Logger &logger, const Logger::symbol &symbol)
 {
 	switch (symbol) {
 		case Logger::NEUTRAL:
-			return os << Color::BOLD << Color::FG_WHITE << "[-] " << Color::RESET;
+			logger.out() << Color::BOLD << Color::FG_WHITE; break;
 		case Logger::SUCCESS:
-			return os << Color::BOLD << Color::FG_GREEN << "[+] " << Color::RESET;
+			logger.out() << Color::BOLD << Color::FG_GREEN; break;
 		case Logger::WARNING:
-			return os << Color::BOLD << Color::FG_YELLOW << "[!] " << Color::RESET;
+			logger.out() << Color::BOLD << Color::FG_YELLOW; break;
 		case Logger::ERROR:
-			return os << Color::BOLD << Color::FG_RED << "[-] " << Color::RESET;
+			logger.out() << Color::BOLD << Color::FG_RED; break;
 		default:
-			return os;
+			return logger.out();
 	}
+	logger.out() << "[" << std::setfill(' ') << std::setw(10) << logger.name() << "] " << Color::RESET;
+	return logger.out();
 }
+
+// std::ostream & operator<<(Logger &logger, const std::string &message)
+// {
+// 	std::cout << "using operator << for logger with message" << std::endl;
+// 	return logger.out() << message;
+// }
