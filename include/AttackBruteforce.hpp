@@ -13,7 +13,7 @@ private:
 	const unsigned int	_maxLength;
 
 public:
-	AttackBruteforce();
+	AttackBruteforce(const std::string &characterSet = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*", const unsigned int maxLength = 8);
 	~AttackBruteforce();
 	
 	IAttack::results	crack(const Hash::md5digest &digest, const size_t length);

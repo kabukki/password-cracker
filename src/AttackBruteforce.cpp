@@ -3,12 +3,11 @@
 #include <vector>
 #include "AttackBruteforce.hpp"
 
-AttackBruteforce::AttackBruteforce()
-	: _name("Bruteforce"), _logger(Logger(std::cout, "bruteforce")), _characterSet("abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*"), _maxLength(3)
+AttackBruteforce::AttackBruteforce(const std::string &characterSet, const unsigned int maxLength)
+	: _name("Bruteforce"), _logger(Logger(std::cout, "bruteforce")), _characterSet(characterSet), _maxLength(maxLength)
 {}
 AttackBruteforce::~AttackBruteforce () {}
 
-// length = longueur du password a trouver
 IAttack::results	AttackBruteforce::crack(const Hash::md5digest &digest, const size_t length)
 {
 	int 				setLength = static_cast<int>(_characterSet.length());
@@ -50,6 +49,7 @@ IAttack::results	AttackBruteforce::crack(const Hash::md5digest &digest)
 	IAttack::results results;
 
 	for (size_t n = 1; n <= _maxLength; n++) {
+		_logger << Logger::NEUTRAL << "Trying with length: " << n << std::endl;
 		results = crack(digest, n);
 		if (results.success) {
 			break;
