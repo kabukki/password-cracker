@@ -12,7 +12,7 @@ OBJ	=	$(SRC:.cpp=.o)
 INC	=	-I include
 LIB	=	-lcrypto
 
-CXXFLAGS	=	-g -fopenmp -W
+CXXFLAGS	=	-g -fopenmp -W -O3
 CC			=	g++ $(CXXFLAGS)
 RM			=	rm -rf
 
