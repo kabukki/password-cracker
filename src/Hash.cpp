@@ -31,12 +31,7 @@ void	Hash::translate(const std::string &str, Hash::md5digest &digest)
  */
 bool	Hash::compareDigests(const Hash::md5digest &a, const Hash::md5digest &b)
 {
-	for (size_t n = 0; n < MD5_DIGEST_LENGTH; n++) {
-		if (a[n] != b[n]) {
-			return false;
-		}
-	}
-	return true;
+	return std::memcmp(a, b, MD5_DIGEST_LENGTH) == 0;
 }
 
 /**

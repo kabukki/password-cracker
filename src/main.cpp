@@ -28,8 +28,10 @@ int main(int argc, char **argv)
 			Hash::md5digest digest;
 			Hash::translate(str, digest);
 
-			cracker.addAttack(std::make_shared<AttackDictionary>("mots-8-et-moins.txt"));
-			cracker.addAttack(std::make_shared<AttackBruteforce>("abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*", 6));
+			cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/mots-8-et-moins.txt"));
+			// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/rockyou.txt"));
+			cracker.addAttack(std::make_shared<AttackBruteforce>("abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*", 8));
+			// cracker.addAttack(std::make_shared<AttackBruteforce>("abcd", 3));
 
 			return cracker.crack(digest) ? EXIT_SUCCESS : EXIT_FAILURE;
 		}

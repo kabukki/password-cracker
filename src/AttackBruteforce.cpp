@@ -10,21 +10,30 @@ AttackBruteforce::AttackBruteforce(const std::string &characterSet, const unsign
 {}
 AttackBruteforce::~AttackBruteforce () {}
 
-IAttack::results	AttackBruteforce::crack(const Hash::md5digest &digest, const size_t length)
+/**
+ * Bruteforce every combination in a given section.
+ * A section starts with
+ * 		start - first - first
+ * and ends with
+ * 		start - last - last
+ * For example, if the character set is 'abcd' and the start letter is 'a',
+ * this function will go through 'aaa' to 'add'
+ */
+IAttack::results	AttackBruteforce::crackSection(const Hash::md5digest &digest, const size_t length, size_t startCharacterIndex)
 {
 	unsigned int				setLength = static_cast<int>(_characterSet.length());
-	unsigned int				combinations = std::pow(setLength, length);
+	unsigned long long			combinations = std::pow(setLength, length - 1);
 	IAttack::results			results { false, nullptr, 0 };
-	std::string					password(length, 0);
-	std::vector<unsigned int>	indices(length, 0);
+	std::string					password(length, _characterSet.front());
+	std::vector<size_t>			indices(length, 0);
 
-	for (unsigned int x = 0; x < combinations; x++) {
-		std::transform(
-			indices.begin(), indices.end(), password.begin(),
-			[this](int index) -> char { return _characterSet[index]; }
-		);
+	indices[0] = startCharacterIndex;
+	password[0] = _characterSet[indices[0]];
+
+	for (unsigned long long x = 0; x < combinations; x++) {
 
 		results.attempts++;
+		// std::cout << password << "\n";
 
 		if (Hash::check(password, digest)) {
 			results.success = true;
@@ -33,15 +42,31 @@ IAttack::results	AttackBruteforce::crack(const Hash::md5digest &digest, const si
 		}
 
 		// Generate next string
-		for (int n = length - 1; n >= 0; n--) {
+		for (int n = length - 1; n > 0; n--) {
 			indices[n]++;
-			// If the first letter wrapped, then all possbilities have been checked
+			password[n] = _characterSet[indices[n]];
+			// If the penultimate letter wrapped, then all possbilities have been checked for this section
 			// So we don't reset this letter and the loop will end here.
-			if (indices[n] >= setLength && n > 0) {
+			if (indices[n] >= setLength && n > 1) {
 				indices[n] = 0;
+				password[n] = _characterSet[indices[n]];
 			} else {
 				break;
 			}
+		}
+	}
+	return results;
+}
+
+IAttack::results	AttackBruteforce::crack(const Hash::md5digest &digest, const size_t length)
+{
+	IAttack::results			results { false, nullptr, 0 };
+
+	for (size_t startCharacterIndex = 0; startCharacterIndex < _characterSet.length(); startCharacterIndex++) {
+		_logger << Logger::NEUTRAL << "Trying combinations starting with " << _characterSet[startCharacterIndex] << std::endl;
+		results = crackSection(digest, length, startCharacterIndex);
+		if (results.success) {
+			break;
 		}
 	}
 	return results;
