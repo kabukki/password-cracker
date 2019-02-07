@@ -2,11 +2,11 @@ BIN	=	crack
 
 SRC	=	src/main.cpp				\
 		src/Cracker.cpp				\
-		src/AttackBruteforce.cpp	\
-		src/AttackDictionary.cpp	\
+		src/GeneratorBruteforce.cpp	\
+		src/GeneratorDictionary.cpp	\
 		src/Hash.cpp				\
 		src/Logger.cpp				\
-		src/Color.cpp				
+		src/Color.cpp
 OBJ	=	$(SRC:.cpp=.o)
 
 INC	=	-I include
