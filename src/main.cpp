@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 			// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/nul.txt"));
 
 			cracker.addAttack(std::make_shared<AttackBruteforce>("abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*", 6));
-			// cracker.addAttack(std::make_shared<AttackBruteforce>("abcd", 8));
+			// cracker.addAttack(std::make_shared<AttackBruteforce>("abcd", 3));
 
 			return cracker.crack(digest) ? EXIT_SUCCESS : EXIT_FAILURE;
 		}
