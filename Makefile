@@ -16,6 +16,14 @@ CXXFLAGS	=	-g -fopenmp -W -O3
 CC			=	g++ $(CXXFLAGS)
 RM			=	rm -rf
 
+# Linking
+$(BIN):	$(OBJ)
+	$(CC) $^ $(INC) $(LIB) -o $@
+
+# Compilation
+%.o:	%.cpp
+	$(CC) -c $< $(INC) -o $@
+
 # Extra rules
 all:	$(BIN)
 
@@ -26,11 +34,3 @@ fclean:	clean
 re: fclean all
 
 .PHONY:	$(BIN)
-
-# Linking
-$(BIN):	$(OBJ)
-	$(CC) $^ $(INC) $(LIB) -o $@
-
-# Compilation
-%.o:	%.cpp
-	$(CC) -c $< $(INC) -o $@
