@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include <chrono>
 #include "Hash.hpp"
 
 class IAttack
@@ -12,6 +13,7 @@ public:
 		bool							success;
 		std::unique_ptr<std::string>	password;
 		unsigned int					attempts;
+		std::chrono::milliseconds		duration;
 	};
 
 	virtual IAttack::results	crack(const Hash::md5digest &digest) = 0;

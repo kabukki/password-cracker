@@ -33,11 +33,12 @@ std::string			AttackBruteforce::nthString(const size_t n)
 	return password;
 }
 
-IAttack::results	AttackBruteforce::crack(const Hash::md5digest &digest)
+IAttack::results		AttackBruteforce::crack(const Hash::md5digest &digest)
 {
-	IAttack::results	results { false, nullptr, 0 };
+	IAttack::results	results { false, nullptr, 0, std::chrono::milliseconds(0) };
 	std::atomic<bool>	done(false);
 	size_t				possibilities = 0;
+	auto				begin = std::chrono::steady_clock::now();
 	
 	for (size_t n = 1; n <= _maxLength; ++n) {
 		possibilities += std::pow(_charsetLength, n);
@@ -70,6 +71,8 @@ IAttack::results	AttackBruteforce::crack(const Hash::md5digest &digest)
 		}	
 	}
 	
+	results.duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin);
+
 	if (results.success) {
 		_logger.success("Found");
 	} else {

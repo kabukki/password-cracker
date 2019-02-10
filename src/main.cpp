@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 
 			Hash::translate(str, digest);
 
-			cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/mots-8-et-moins.txt"));
+			// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/mots-8-et-moins.txt"));
 			// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/rockyou.txt"));
 			// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/nul.txt"));
 
