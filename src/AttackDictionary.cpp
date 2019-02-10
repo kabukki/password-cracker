@@ -15,7 +15,7 @@ IAttack::results		AttackDictionary::crack(const Hash::md5digest &digest)
 	IAttack::results	results { false, nullptr, 0, std::chrono::milliseconds(0) };
 	auto				begin = std::chrono::steady_clock::now();
 
-	_logger.log(describe());
+	_logger.log(description());
 
 	if (dictionary.is_open()) {
 		std::string password;
@@ -49,7 +49,7 @@ const std::string&	AttackDictionary::name()
 	return _name;
 }
 
-const std::string	AttackDictionary::describe()
+const std::string	AttackDictionary::description()
 {
 	return "Dictionary fetched from file: " + _dictionaryPath;
 }

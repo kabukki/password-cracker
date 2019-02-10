@@ -17,7 +17,7 @@ public:
 	
 	IAttack::results	crack(const Hash::md5digest &digest) override;
 	const std::string&	name() override;
-	const std::string	describe() override;
+	const std::string	description() override;
 };
 
 #endif
