@@ -42,7 +42,7 @@ std::string			AttackBruteforce::nthString(const size_t n)
 
 IAttack::results		AttackBruteforce::crack(const Hash::md5digest &digest)
 {
-	IAttack::results	results { false, nullptr, 0, std::chrono::milliseconds(0) };
+	IAttack::results	results { false, nullptr, std::chrono::milliseconds(0) };
 	std::atomic<bool>	done(false);
 	auto				begin = std::chrono::steady_clock::now();
 
@@ -57,8 +57,6 @@ IAttack::results		AttackBruteforce::crack(const Hash::md5digest &digest)
 
 		for (size_t n = start; !done && n < _possibilities; n += step) {
 			std::string password = nthString(n);
-			
-			++results.attempts;
 			
 			if (Hash::check(password, digest)) {
 				done = true;

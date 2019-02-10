@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include <chrono>
+#include <vector>
 #include "Hash.hpp"
 
 class IAttack
@@ -12,7 +13,6 @@ public:
 	struct results {
 		bool							success;
 		std::unique_ptr<std::string>	password;
-		unsigned int					attempts;
 		std::chrono::milliseconds		duration;
 	};
 

@@ -39,8 +39,7 @@ bool	Cracker::crack(const Hash::md5digest &digest)
 		if (results.success == true) {
 			_logger << Logger::SUCCESS
 				<< "Found password " << Color::BOLD << *(results.password) << Color::RESET
-				<< " in " << results.duration.count() << "ms"
-				<< " after " << results.attempts << " attempts" << std::endl;
+				<< " in " << results.duration.count() << "ms" << std::endl;
 			return true;
 		} else {
 			_logger.warn("Could not find password using " + attack->name() + " attack.");

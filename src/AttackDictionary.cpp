@@ -12,7 +12,7 @@ IAttack::results		AttackDictionary::crack(const Hash::md5digest &digest)
 {
 	const std::string	path(_dictionaryPath);
 	std::ifstream		dictionary(path);
-	IAttack::results	results { false, nullptr, 0, std::chrono::milliseconds(0) };
+	IAttack::results	results { false, nullptr, std::chrono::milliseconds(0) };
 	auto				begin = std::chrono::steady_clock::now();
 
 	_logger.log(description());
@@ -21,7 +21,6 @@ IAttack::results		AttackDictionary::crack(const Hash::md5digest &digest)
 		std::string password;
 
 		while (std::getline(dictionary, password)) {
-			results.attempts++;
 			if (Hash::check(password, digest)) {
 				results.success = true;
 				results.password = std::make_unique<std::string>(password);

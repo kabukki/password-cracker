@@ -28,7 +28,7 @@ void	Hash::translate(const std::string &str, Hash::md5digest &digest)
 /**
  * Compares to digests and returns whether they are the same
  */
-bool	Hash::compareDigests(const Hash::md5digest &a, const Hash::md5digest &b)
+bool	Hash::check(const Hash::md5digest &a, const Hash::md5digest &b)
 {
 	return std::memcmp(a, b, MD5_DIGEST_LENGTH) == 0;
 }
@@ -41,7 +41,7 @@ bool	Hash::check(const std::string &password, const Hash::md5digest &digest)
 	Hash::md5digest	passwordDigest;
 
 	Hash::md5(password, passwordDigest);
-	return Hash::compareDigests(digest, passwordDigest);
+	return Hash::check(digest, passwordDigest);
 }
 
 std::ostream & operator<<(std::ostream &os, const Hash::md5digest &digest)
