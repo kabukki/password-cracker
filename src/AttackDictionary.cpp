@@ -1,14 +1,13 @@
 #include <iostream>
 #include <fstream>
 #include "AttackDictionary.hpp"
-#include "Hash.hpp"
 
 AttackDictionary::AttackDictionary(const std::string &dictionaryPath)
 	: _name("Dictionary"), _logger(Logger(std::cout, "dictionary")), _dictionaryPath(dictionaryPath)
 {}
 AttackDictionary::~AttackDictionary() {}
 
-IAttack::results		AttackDictionary::crack(const Hash::md5digest &digest)
+IAttack::results		AttackDictionary::crack(const HashMD5& digest)
 {
 	const std::string	path(_dictionaryPath);
 	std::ifstream		dictionary(path);
@@ -21,7 +20,7 @@ IAttack::results		AttackDictionary::crack(const Hash::md5digest &digest)
 		std::string password;
 
 		while (std::getline(dictionary, password)) {
-			if (Hash::check(password, digest)) {
+			if (digest.check(password)) {
 				results.success = true;
 				results.password = std::make_unique<std::string>(password);
 				break;

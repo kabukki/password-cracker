@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <cmath>
 #include <omp.h>
 #include <atomic>
@@ -20,7 +21,7 @@ std::string	Cracker::strategyToString() const
 	return strategy;
 }
 
-bool	Cracker::crack(const Hash::md5digest &digest)
+bool	Cracker::crack(const HashMD5 &digest)
 {
 	if (_strategy.empty()) {
 		_logger.warn("No strategy specified to crack password. Aborting");

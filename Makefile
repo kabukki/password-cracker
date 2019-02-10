@@ -4,7 +4,7 @@ SRC	=	src/main.cpp				\
 		src/Cracker.cpp				\
 		src/AttackBruteforce.cpp	\
 		src/AttackDictionary.cpp	\
-		src/Hash.cpp				\
+		src/HashMD5.cpp				\
 		src/Logger.cpp				\
 		src/Color.cpp
 OBJ	=	$(SRC:.cpp=.o)

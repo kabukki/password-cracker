@@ -4,7 +4,7 @@
 #include "AttackDictionary.hpp"
 #include "Cracker.hpp"
 #include "Logger.hpp"
-#include "Hash.hpp"
+#include "HashMD5.hpp"
 
 void usage(const std::string &binary)
 {
@@ -25,9 +25,8 @@ int main(int argc, char **argv)
 			return EXIT_FAILURE;
 		} else {
 			Cracker cracker;
-			Hash::md5digest digest;
-
-			Hash::translate(str, digest);
+			HashMD5 digest(str);
+			// HashMD5 mdr = HashMD5::hash("truc");
 
 			// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/mots-8-et-moins.txt"));
 			// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/rockyou.txt"));

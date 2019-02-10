@@ -25,7 +25,7 @@ public:
 	AttackBruteforce(const std::string &charset = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*", const size_t maxLength = 8);
 	~AttackBruteforce();
 	
-	IAttack::results	crack(const Hash::md5digest &digest) override;
+	IAttack::results	crack(const HashMD5& digest) override;
 	const std::string&	name() override;
 	const std::string	description() override;
 };
