@@ -1,5 +1,8 @@
 #include <iostream>
 #include <chrono>
+#include <cmath>
+#include <omp.h>
+#include <atomic>
 #include "Cracker.hpp"
 #include "Color.hpp"
 
@@ -31,22 +34,11 @@ bool	Cracker::crack(const Hash::md5digest &digest)
 	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 	std::chrono::steady_clock::time_point end;
 
-	for (auto& generator : _strategy) {
-		Cracker::results results { false, nullptr, 0 };;
+	for (auto& attack : _strategy) {
+		IAttack::results results;
 
-		_logger << Logger::NEUTRAL << "Using generator: " << Color::FG_YELLOW << generator->name() << Color::RESET << std::endl;
-		_logger << Logger::NEUTRAL << generator->describe() << std::endl;
-
-		while (*generator) {
-			// std::cout << **generator << std::endl;
-			results.attempts++;
-			if (Hash::check(**generator, digest)) {
-				results.success = true;
-				results.password = std::make_unique<std::string>(**generator);
-				break;
-			}
-			++*(generator);
-		}
+		_logger << Logger::NEUTRAL << "Using attack: " << Color::FG_YELLOW << attack->name() << Color::RESET << std::endl;
+		results = attack->crack(digest);
 
 		if (results.success == true) {
 			end = std::chrono::steady_clock::now();
@@ -58,14 +50,14 @@ bool	Cracker::crack(const Hash::md5digest &digest)
 				<< " after " << results.attempts << " attempts" << std::endl;
 			return true;
 		} else {
-			_logger.warn("Could not find password using " + generator->name() + " attack.");
+			_logger.warn("Could not find password using " + attack->name() + " attack.");
 		}
 	}
 	_logger.error("Unable to crack digest.");
 	return false;
 }
 
-void	Cracker::addGenerator(std::shared_ptr<IGenerator> generator)
+void	Cracker::addAttack(std::shared_ptr<IAttack> attack)
 {
-	_strategy.push_back(generator);
+	_strategy.push_back(attack);
 }

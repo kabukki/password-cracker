@@ -3,14 +3,14 @@
 
 #include <memory>
 #include <vector>
-#include "IGenerator.hpp"
+#include "IAttack.hpp"
 #include "Logger.hpp"
 #include "Hash.hpp"
 
 class Cracker
 {
 private:
-	std::vector<std::shared_ptr<IGenerator>>	_strategy;
+	std::vector<std::shared_ptr<IAttack>>		_strategy;
 	Logger										_logger;
 
 	std::string	strategyToString() const;
@@ -26,7 +26,7 @@ public:
 	~Cracker();
 
 	bool		crack(const Hash::md5digest &digest);
-	void		addGenerator(std::shared_ptr<IGenerator> generator);
+	void		addAttack(std::shared_ptr<IAttack> attack);
 };
 
 #endif

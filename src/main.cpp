@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include "GeneratorBruteforce.hpp"
-#include "GeneratorDictionary.hpp"
+#include "AttackBruteforce.hpp"
+#include "AttackDictionary.hpp"
 #include "Cracker.hpp"
 #include "Logger.hpp"
 #include "Hash.hpp"
@@ -29,12 +29,12 @@ int main(int argc, char **argv)
 
 			Hash::translate(str, digest);
 
-			// cracker.addGenerator(std::make_shared<GeneratorDictionary>("dictionaries/nul.txt"));
-			cracker.addGenerator(std::make_shared<GeneratorDictionary>("dictionaries/mots-8-et-moins.txt"));
-			// cracker.addGenerator(std::make_shared<GeneratorDictionary>("dictionaries/rockyou.txt"));
+			cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/mots-8-et-moins.txt"));
+			// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/rockyou.txt"));
+			// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/nul.txt"));
 
-			cracker.addGenerator(std::make_shared<GeneratorBruteforce>("abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*", 1, 5));
-			// cracker.addGenerator(std::make_shared<AttackBruteforce>("abcd", 3));
+			cracker.addAttack(std::make_shared<AttackBruteforce>("abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*", 6));
+			// cracker.addAttack(std::make_shared<AttackBruteforce>("abcd", 8));
 
 			return cracker.crack(digest) ? EXIT_SUCCESS : EXIT_FAILURE;
 		}
