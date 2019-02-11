@@ -15,7 +15,7 @@ public:
 	AttackDictionary(const std::string &dictionaryPath);
 	~AttackDictionary();
 	
-	IAttack::results	crack(const HashMD5& digest) override;
+	void				crack(const std::vector<HashMD5> digests, std::vector<IAttack::results>& results) override;
 	const std::string&	name() override;
 	const std::string	description() override;
 };

@@ -10,12 +10,11 @@ class IAttack
 {
 public:
 	struct results {
-		bool							success;
 		std::unique_ptr<HashMD5>		digest;
 		std::unique_ptr<std::string>	password;
 	};
 
-	virtual IAttack::results	crack(const HashMD5& digest) = 0;
+	virtual void				crack(const std::vector<HashMD5> digests, std::vector<IAttack::results>& results) = 0;
 	virtual const std::string&	name() = 0;
 	virtual const std::string	description() = 0;
 };

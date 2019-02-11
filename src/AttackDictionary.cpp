@@ -7,11 +7,10 @@ AttackDictionary::AttackDictionary(const std::string &dictionaryPath)
 {}
 AttackDictionary::~AttackDictionary() {}
 
-IAttack::results		AttackDictionary::crack(const HashMD5& digest)
+void				AttackDictionary::crack(const std::vector<HashMD5> digests, std::vector<IAttack::results>& results)
 {
-	const std::string	path(_dictionaryPath);
-	std::ifstream		dictionary(path);
-	IAttack::results	results { false, std::make_unique<HashMD5>(digest), nullptr };
+	std::ifstream	dictionary(_dictionaryPath);
+	size_t			resultsSizeBefore = results.size();
 
 	_logger.log(description());
 
@@ -19,24 +18,24 @@ IAttack::results		AttackDictionary::crack(const HashMD5& digest)
 		std::string password;
 
 		while (std::getline(dictionary, password)) {
-			if (digest.check(password)) {
-				results.success = true;
-				results.password = std::make_unique<std::string>(password);
-				break;
+			for (auto& digest : digests) {
+				if (digest.check(password)) {
+					_logger.success("Found " + password);
+					results.push_back(IAttack::results {
+						std::make_unique<HashMD5>(digest),
+						std::make_unique<std::string>(password)
+					});
+				}
 			}
 		}
 		dictionary.close();
 	} else {
-		_logger.error("Could not open config file (" + path + ")");
+		_logger.error("Could not open config file (" + _dictionaryPath + ")");
 	}
 
-	if (results.success) {
-		_logger.success("Found");
-	} else {
-		_logger.warn("Not found");
+	if (results.size() - resultsSizeBefore == 0) {
+		_logger.warn("Did not find any password");
 	}
-
-	return results;
 }
 
 const std::string&	AttackDictionary::name()

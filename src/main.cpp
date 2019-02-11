@@ -8,34 +8,37 @@
 
 void usage(const std::string &binary)
 {
-	std::cerr << "Usage: " << binary << " <digest>" << std::endl;
+	std::cerr << "Usage: " << binary << " <digest> ..." << std::endl;
 }
 
 int main(int argc, char **argv)
 {
-	if (argc != 2) {
+	if (argc < 2) {
 		usage(argv[0]);
 		return EXIT_FAILURE;
 	} else {
-		Logger logger(std::cout);
-		std::string str(argv[1]);
+		Cracker cracker;
+		Logger logger(std::cout, "main");
+		std::vector<HashMD5> digests;
 
-		if (str.length() != MD5_DIGEST_LENGTH * 2) {
-			logger.error("MD5 digest is invalid.");
-			return EXIT_FAILURE;
-		} else {
-			Cracker cracker;
-			HashMD5 digest(str);
-			// HashMD5 mdr = HashMD5::hash("truc");
+		for (size_t n = 1; n < static_cast<size_t>(argc); ++n) {
+			std::string strDigest(argv[n]);
 
-			// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/mots-8-et-moins.txt"));
-			// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/rockyou.txt"));
-			// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/nul.txt"));
+			if (strDigest.length() != MD5_DIGEST_LENGTH * 2) {
+				logger.error("MD5 digest is invalid.");
+				return EXIT_FAILURE;
+			}
 
-			cracker.addAttack(std::make_shared<AttackBruteforce>("abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*", 6));
-			// cracker.addAttack(std::make_shared<AttackBruteforce>("abcd", 3));
-
-			return cracker.crack(digest) ? EXIT_SUCCESS : EXIT_FAILURE;
+			digests.push_back(HashMD5(strDigest));
 		}
+
+		cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/mots-8-et-moins.txt"));
+		// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/rockyou.txt"));
+		// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/nul.txt"));
+
+		cracker.addAttack(std::make_shared<AttackBruteforce>("abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*", 8));
+		// cracker.addAttack(std::make_shared<AttackBruteforce>("abcd", 3));
+	
+		return cracker.crack(digests) ? EXIT_SUCCESS : EXIT_FAILURE;
 	}
 }

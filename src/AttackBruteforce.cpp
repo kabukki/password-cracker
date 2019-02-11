@@ -40,12 +40,10 @@ std::string			AttackBruteforce::nthString(const size_t n)
 	return password;
 }
 
-IAttack::results		AttackBruteforce::crack(const HashMD5& digest)
+void					AttackBruteforce::crack(const std::vector<HashMD5> digests, std::vector<IAttack::results>& results)
 {
-	IAttack::results	results { false, std::make_unique<HashMD5>(digest), nullptr };
 	std::atomic<bool>	done(false);
-
-	// results.digest = &digest;
+	size_t				resultsSizeBefore = results.size();
 
 	_logger.log(description());
 	_logger.log(std::to_string(_possibilities) + " possibilities total");
@@ -59,22 +57,26 @@ IAttack::results		AttackBruteforce::crack(const HashMD5& digest)
 		for (size_t n = start; !done && n < _possibilities; n += step) {
 			std::string password = nthString(n);
 			
-			if (digest.check(password)) {
-				done = true;
-				results.success = true;
-				results.password = std::make_unique<std::string>(password);
+			for (auto& digest : digests) {
+				// std::cout << digest << std::endl;
+				if (digest.check(password)) {
+					_logger.success("Found " + password);
+					results.push_back(IAttack::results {
+						std::make_unique<HashMD5>(digest),
+						std::make_unique<std::string>(password)
+					});
+				}
+				if (results.size() == digests.size()) {
+					done = true;
+					break;
+				}
 			}
 		}	
 	}
-	
 
-	if (results.success) {
-		_logger.success("Found");
-	} else {
-		_logger.warn("Not found");
+	if (results.size() - resultsSizeBefore == 0) {
+		_logger.warn("Did not find any password");
 	}
-
-	return results;
 }
 
 const std::string&	AttackBruteforce::name()

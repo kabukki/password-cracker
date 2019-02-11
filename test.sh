@@ -4,8 +4,11 @@
 # Check that the program finds the given password
 #
 
-if [[ $# -eq 1 ]]; then
-	./crack $(echo -n "$1" | md5sum | cut -d ' ' -f 1)
+HASHES=()
+
+if [[ $# -ge 1 ]]; then
+	for password in $@; do HASHES+=($(echo -n $password | md5sum | cut -d ' ' -f 1)); done
+	./crack ${HASHES[@]}
 else
 	echo "Usage: $0 <password>"
 fi

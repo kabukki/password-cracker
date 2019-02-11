@@ -17,6 +17,11 @@ HashMD5::HashMD5(const unsigned char* digest)
 	_digest = new unsigned char[MD5_DIGEST_LENGTH];
 	memcpy(_digest, digest, MD5_DIGEST_LENGTH);
 }
+HashMD5::HashMD5(const HashMD5& other)
+{
+	_digest = new unsigned char[MD5_DIGEST_LENGTH];
+	memcpy(_digest, other._digest, MD5_DIGEST_LENGTH);
+}
 HashMD5::~HashMD5()
 {
 	delete[] _digest;

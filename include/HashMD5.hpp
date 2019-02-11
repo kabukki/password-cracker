@@ -12,6 +12,7 @@ private:
 public:
 	HashMD5(const std::string& digest);
 	HashMD5(const unsigned char* digest);
+	HashMD5(const HashMD5& other);
 	~HashMD5();
 
 	static HashMD5			hash(const std::string &message);
