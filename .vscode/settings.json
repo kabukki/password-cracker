@@ -41,6 +41,7 @@
 		"chrono": "cpp",
 		"ratio": "cpp",
 		"algorithm": "cpp",
-		"atomic": "cpp"
+		"atomic": "cpp",
+		"thread": "cpp"
 	}
 }

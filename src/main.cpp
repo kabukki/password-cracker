@@ -1,44 +1,59 @@
 #include <iostream>
+#include <unistd.h>
 #include <string>
+#include <thread>
 #include "AttackBruteforce.hpp"
 #include "AttackDictionary.hpp"
 #include "Cracker.hpp"
 #include "Logger.hpp"
 #include "HashMD5.hpp"
 
+/**
+ * Getopt: https://www.gnu.org/software/libc/manual/html_node/Using-Getopt.html#Using-Getopt
+ */
+
 void usage(const std::string &binary)
 {
-	std::cerr << "Usage: " << binary << " <digest> ..." << std::endl;
+	std::cerr << "Usage: " << binary << " [-d dictionary] [digest...]" << std::endl;
+	std::cerr << "	-d	use the given dictionary as a wordlist to test against" << std::endl;
 }
 
-int main(int argc, char **argv)
+int							main(int argc, char **argv)
 {
-	if (argc < 2) {
-		usage(argv[0]);
-		return EXIT_FAILURE;
-	} else {
-		Cracker cracker;
-		Logger logger(std::cout, "main");
-		std::vector<HashMD5> digests;
+	Logger					logger(std::cout, "main");
+	std::vector<HashMD5>	digests;
+	Cracker 				cracker;
+	int						c;
 
-		for (size_t n = 1; n < static_cast<size_t>(argc); ++n) {
-			std::string strDigest(argv[n]);
-
-			if (strDigest.length() != MD5_DIGEST_LENGTH * 2) {
-				logger.error("MD5 digest is invalid.");
+	// Parse arguments to add appropriate attacks
+	while ((c = getopt(argc, argv, "hd:")) != -1) {
+		switch (c) {
+			case 'h':
+				usage(argv[0]);
 				return EXIT_FAILURE;
-			}
+			case 'd':
+				// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/mots-8-et-moins.txt"));
+				cracker.addAttack(std::make_shared<AttackDictionary>(optarg));
+				break;
+			default:
+				return EXIT_FAILURE;
+		}
+	}
 
-			digests.push_back(HashMD5(strDigest));
+	// Add all hashes
+	for (int n = optind; n < argc; ++n) {
+		std::string strDigest(argv[n]);
+
+		if (strDigest.length() != MD5_DIGEST_LENGTH * 2) {
+			logger.error("MD5 digest is invalid.");
+			return EXIT_FAILURE;
 		}
 
-		cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/mots-8-et-moins.txt"));
-		// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/rockyou.txt"));
-		// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/nul.txt"));
-
-		cracker.addAttack(std::make_shared<AttackBruteforce>("abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*", 8));
-		// cracker.addAttack(std::make_shared<AttackBruteforce>("abcd", 3));
-	
-		return cracker.crack(digests) ? EXIT_SUCCESS : EXIT_FAILURE;
+		digests.push_back(HashMD5(strDigest));
 	}
+
+	// Default attacks
+	cracker.addAttack(std::make_shared<AttackBruteforce>("abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*", 8));
+
+	return cracker.crack(digests) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

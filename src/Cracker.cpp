@@ -28,6 +28,9 @@ bool								Cracker::crack(const std::vector<HashMD5> digests)
 	if (_strategy.empty()) {
 		_logger.warn("No strategy specified to crack password. Aborting");
 		return false;
+	} else if (digests.empty()) {
+		_logger.warn("No digest to crack. Aborting");
+		return false;
 	}
 	
 	_logger << Logger::NEUTRAL << "Attempting to crack " << Color::FG_YELLOW << digests.size() << Color::RESET << " digests." << std::endl;
