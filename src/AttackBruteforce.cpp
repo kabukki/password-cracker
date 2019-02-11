@@ -58,7 +58,6 @@ void					AttackBruteforce::crack(const std::vector<HashMD5> digests, std::vector
 			std::string password = nthString(n);
 			
 			for (auto& digest : digests) {
-				// std::cout << digest << std::endl;
 				if (digest.check(password)) {
 					_logger.success("Found " + password);
 					results.push_back(IAttack::results {

@@ -11,13 +11,14 @@ void				AttackDictionary::crack(const std::vector<HashMD5> digests, std::vector<
 {
 	std::ifstream	dictionary(_dictionaryPath);
 	size_t			resultsSizeBefore = results.size();
+	bool			done = false;
 
 	_logger.log(description());
 
 	if (dictionary.is_open()) {
 		std::string password;
 
-		while (std::getline(dictionary, password)) {
+		while (!done && std::getline(dictionary, password)) {
 			for (auto& digest : digests) {
 				if (digest.check(password)) {
 					_logger.success("Found " + password);
@@ -25,6 +26,10 @@ void				AttackDictionary::crack(const std::vector<HashMD5> digests, std::vector<
 						std::make_unique<HashMD5>(digest),
 						std::make_unique<std::string>(password)
 					});
+				}
+				if (results.size() == digests.size()) {
+					done = false;
+					break;
 				}
 			}
 		}
