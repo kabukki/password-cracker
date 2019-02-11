@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#define ENABLE_COLORS	1
+
 namespace Color
 {
 	enum code {
@@ -38,6 +40,6 @@ namespace Color
 
 };
 
-std::ostream & operator<<(std::ostream & os, const Color::code & code);
+std::ostream & operator<<(std::ostream& os, const Color::code& code);
 
 #endif
