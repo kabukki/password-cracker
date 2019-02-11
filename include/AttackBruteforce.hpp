@@ -5,7 +5,7 @@
 #include "IAttack.hpp"
 #include "Logger.hpp"
 
-#define NUM_THREADS	4
+#define NUM_THREADS	1
 
 class AttackBruteforce : public IAttack
 {

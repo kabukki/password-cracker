@@ -1,10 +1,10 @@
 BIN	=	crack
 
 SRC	=	src/main.cpp				\
+		src/HashMD5.cpp				\
 		src/Cracker.cpp				\
 		src/AttackBruteforce.cpp	\
 		src/AttackDictionary.cpp	\
-		src/HashMD5.cpp				\
 		src/Logger.cpp				\
 		src/Color.cpp
 OBJ	=	$(SRC:.cpp=.o)

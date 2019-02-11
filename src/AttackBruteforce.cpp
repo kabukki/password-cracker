@@ -42,9 +42,8 @@ std::string			AttackBruteforce::nthString(const size_t n)
 
 IAttack::results		AttackBruteforce::crack(const HashMD5& digest)
 {
-	IAttack::results	results { false, nullptr, std::chrono::milliseconds(0) };
+	IAttack::results	results { false, std::make_unique<HashMD5>(digest), nullptr };
 	std::atomic<bool>	done(false);
-	auto				begin = std::chrono::steady_clock::now();
 
 	// results.digest = &digest;
 
@@ -68,12 +67,11 @@ IAttack::results		AttackBruteforce::crack(const HashMD5& digest)
 		}	
 	}
 	
-	results.duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin);
 
 	if (results.success) {
 		_logger.success("Found");
 	} else {
-		_logger.error("Not found");
+		_logger.warn("Not found");
 	}
 
 	return results;

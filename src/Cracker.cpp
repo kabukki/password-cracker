@@ -1,8 +1,6 @@
 #include <iostream>
 #include <memory>
-#include <cmath>
-#include <omp.h>
-#include <atomic>
+#include <chrono>
 #include "Cracker.hpp"
 #include "Color.hpp"
 
@@ -21,8 +19,11 @@ std::string	Cracker::strategyToString() const
 	return strategy;
 }
 
-bool	Cracker::crack(const HashMD5 &digest)
+bool					Cracker::crack(const HashMD5& digest)
 {
+	auto				begin = std::chrono::steady_clock::now();
+	IAttack::results	results { false, nullptr, nullptr };
+
 	if (_strategy.empty()) {
 		_logger.warn("No strategy specified to crack password. Aborting");
 		return false;
@@ -32,22 +33,25 @@ bool	Cracker::crack(const HashMD5 &digest)
 	_logger << Logger::NEUTRAL << "Strategy is to use: " << strategyToString() << "." << std::endl;
 
 	for (auto& attack : _strategy) {
-		IAttack::results results;
-
 		_logger << Logger::NEUTRAL << "Using attack: " << Color::FG_YELLOW << attack->name() << Color::RESET << std::endl;
 		results = attack->crack(digest);
 
 		if (results.success == true) {
-			_logger << Logger::SUCCESS
-				<< "Found password " << Color::BOLD << *(results.password) << Color::RESET
-				<< " in " << results.duration.count() << "ms" << std::endl;
-			return true;
-		} else {
-			_logger.warn("Could not find password using " + attack->name() + " attack.");
+			break;
 		}
 	}
-	_logger.error("Unable to crack digest.");
-	return false;
+
+	if (results.success) {
+		_logger << Logger::SUCCESS << *(results.digest) << " : " << Color::BOLD << *(results.password) << Color::RESET << std::endl;
+	} else {
+		_logger.error("Unable to crack digest.");
+	}
+
+	_logger.log("Elapsed time: " + std::to_string(
+		std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count()
+	) + "ms");
+
+	return results.success;
 }
 
 void	Cracker::addAttack(std::shared_ptr<IAttack> attack)
