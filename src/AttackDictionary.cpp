@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "AttackDictionary.hpp"
+#include "Color.hpp"
 
 AttackDictionary::AttackDictionary(const std::string &dictionaryPath)
 	: _name("Dictionary"), _logger(Logger(std::cout, "dictionary")), _dictionaryPath(dictionaryPath)
@@ -21,7 +22,7 @@ void				AttackDictionary::crack(const std::vector<HashMD5> digests, std::vector<
 		while (!done && std::getline(dictionary, password)) {
 			for (auto& digest : digests) {
 				if (digest.check(password)) {
-					_logger.success("Found " + password);
+					_logger << Logger::SUCCESS << digest << " : " << Color::BOLD << password << Color::RESET << std::endl;
 					results.push_back(IAttack::results {
 						std::make_unique<HashMD5>(digest),
 						std::make_unique<std::string>(password)

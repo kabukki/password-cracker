@@ -4,6 +4,7 @@
 #include <cmath>
 #include <omp.h>
 #include "AttackBruteforce.hpp"
+#include "Color.hpp"
 
 AttackBruteforce::AttackBruteforce(const std::string &charset, const size_t maxLength)
 	: _name("Bruteforce"), _logger(Logger(std::cout, "bruteforce")), _charset(charset), _charsetLength(charset.length()), _maxLength(maxLength), _possibilities(0)
@@ -59,7 +60,7 @@ void					AttackBruteforce::crack(const std::vector<HashMD5> digests, std::vector
 			
 			for (auto& digest : digests) {
 				if (digest.check(password)) {
-					_logger.success("Found " + password);
+					_logger << Logger::SUCCESS << digest << " : " << Color::BOLD << password << Color::RESET << std::endl;
 					results.push_back(IAttack::results {
 						std::make_unique<HashMD5>(digest),
 						std::make_unique<std::string>(password)
