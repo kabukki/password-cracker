@@ -6,7 +6,7 @@
 #include "AttackDictionary.hpp"
 #include "Cracker.hpp"
 #include "Logger.hpp"
-#include "HashMD5.hpp"
+#include "DigestMD5.hpp"
 
 /**
  * Getopt: https://www.gnu.org/software/libc/manual/html_node/Using-Getopt.html#Using-Getopt
@@ -21,7 +21,7 @@ void usage(const std::string &binary)
 int							main(int argc, char **argv)
 {
 	Logger					logger(std::cout, "main");
-	std::vector<HashMD5>	digests;
+	std::vector<DigestMD5>	digests;
 	Cracker 				cracker;
 	int						c;
 
@@ -49,7 +49,7 @@ int							main(int argc, char **argv)
 			return EXIT_FAILURE;
 		}
 
-		digests.push_back(HashMD5(strDigest));
+		digests.push_back(DigestMD5(strDigest));
 	}
 
 	// Default attacks

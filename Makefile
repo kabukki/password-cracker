@@ -1,7 +1,7 @@
 BIN	=	crack
 
 SRC	=	src/main.cpp				\
-		src/HashMD5.cpp				\
+		src/DigestMD5.cpp				\
 		src/Cracker.cpp				\
 		src/AttackBruteforce.cpp	\
 		src/AttackDictionary.cpp	\

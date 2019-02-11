@@ -20,7 +20,7 @@ std::string	Cracker::strategyToString() const
 	return strategy;
 }
 
-bool								Cracker::crack(const std::vector<HashMD5> digests)
+bool								Cracker::crack(const std::vector<DigestMD5> digests)
 {
 	auto							begin = std::chrono::steady_clock::now();
 	std::vector<IAttack::results>	results;

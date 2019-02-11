@@ -5,7 +5,7 @@
 #include <vector>
 #include "IAttack.hpp"
 #include "Logger.hpp"
-#include "HashMD5.hpp"
+#include "DigestMD5.hpp"
 
 class Cracker
 {
@@ -25,7 +25,7 @@ public:
 	Cracker();
 	~Cracker();
 
-	bool		crack(const std::vector<HashMD5> digests);
+	bool		crack(const std::vector<DigestMD5> digests);
 	void		addAttack(std::shared_ptr<IAttack> attack);
 };
 

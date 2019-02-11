@@ -41,7 +41,7 @@ std::string			AttackBruteforce::nthString(const size_t n)
 	return password;
 }
 
-void					AttackBruteforce::crack(const std::vector<HashMD5> digests, std::vector<IAttack::results>& results)
+void					AttackBruteforce::crack(const std::vector<DigestMD5> digests, std::vector<IAttack::results>& results)
 {
 	std::atomic<bool>	done(false);
 	size_t				resultsSizeBefore = results.size();
@@ -62,7 +62,7 @@ void					AttackBruteforce::crack(const std::vector<HashMD5> digests, std::vector
 				if (digest.check(password)) {
 					_logger << Logger::SUCCESS << digest << " : " << Color::BOLD << password << Color::RESET << std::endl;
 					results.push_back(IAttack::results {
-						std::make_unique<HashMD5>(digest),
+						std::make_unique<DigestMD5>(digest),
 						std::make_unique<std::string>(password)
 					});
 				}
