@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include "AttackDictionary.hpp"
@@ -8,10 +9,10 @@ AttackDictionary::AttackDictionary(const std::string &dictionaryPath)
 {}
 AttackDictionary::~AttackDictionary() {}
 
-void				AttackDictionary::crack(const std::vector<DigestMD5> digests, std::vector<IAttack::results>& results)
+void				AttackDictionary::crack(std::vector<IAttack::pair>& list)
 {
 	std::ifstream	dictionary(_dictionaryPath);
-	size_t			resultsSizeBefore = results.size();
+	size_t			nbCrackedBefore = std::count_if(list.begin(), list.end(), [](IAttack::pair& pair) { return pair.isCracked(); });
 	bool			done = false;
 
 	_logger.log(description());
@@ -20,17 +21,15 @@ void				AttackDictionary::crack(const std::vector<DigestMD5> digests, std::vecto
 		std::string password;
 
 		while (!done && std::getline(dictionary, password)) {
-			for (auto& digest : digests) {
-				if (digest.check(password)) {
-					_logger << Logger::SUCCESS << digest << " : " << Color::BOLD << password << Color::RESET << std::endl;
-					results.push_back(IAttack::results {
-						std::make_unique<DigestMD5>(digest),
-						std::make_unique<std::string>(password)
-					});
-				}
-				if (results.size() == digests.size()) {
-					done = false;
-					break;
+			for (auto& pair : list) {
+				if (pair.digest->check(password)) {
+					_logger << Logger::SUCCESS << *(pair.digest) << " : " << Color::BOLD << password << Color::RESET << std::endl;
+					pair.password = std::make_unique<std::string>(password);
+					// If all digests have been cracked, end here.
+					if (std::all_of(list.begin(), list.end(), [](IAttack::pair& pair) { return pair.isCracked(); })) {
+						done = true;
+						break;
+					}
 				}
 			}
 		}
@@ -39,7 +38,7 @@ void				AttackDictionary::crack(const std::vector<DigestMD5> digests, std::vecto
 		_logger.error("Could not open config file (" + _dictionaryPath + ")");
 	}
 
-	if (results.size() - resultsSizeBefore == 0) {
+	if (std::count_if(list.begin(), list.end(), [](IAttack::pair& pair) { return pair.isCracked(); }) - nbCrackedBefore == 0) {
 		_logger.warn("Did not find any password");
 	}
 }

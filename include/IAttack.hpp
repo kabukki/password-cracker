@@ -14,7 +14,14 @@ public:
 		std::unique_ptr<std::string>	password;
 	};
 
-	virtual void				crack(const std::vector<DigestMD5> digests, std::vector<IAttack::results>& results) = 0;
+	struct pair {
+		std::unique_ptr<DigestMD5>		digest;
+		std::unique_ptr<std::string>	password;
+
+		bool							isCracked() const { return password != nullptr; }
+	};
+
+	virtual void				crack(std::vector<IAttack::pair>& list) = 0;
 	virtual const std::string&	name() = 0;
 	virtual const std::string	description() = 0;
 };

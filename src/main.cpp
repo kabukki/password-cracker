@@ -18,12 +18,12 @@ void usage(const std::string &binary)
 	std::cerr << "	-d	use the given dictionary as a wordlist to test against" << std::endl;
 }
 
-int							main(int argc, char **argv)
+int								main(int argc, char **argv)
 {
-	Logger					logger(std::cout, "main");
-	std::vector<DigestMD5>	digests;
-	Cracker 				cracker;
-	int						c;
+	Logger						logger(std::cout, "main");
+	std::vector<IAttack::pair>	list;
+	Cracker 					cracker;
+	int							c;
 
 	// Parse arguments to add appropriate attacks
 	while ((c = getopt(argc, argv, "hd:")) != -1) {
@@ -49,11 +49,14 @@ int							main(int argc, char **argv)
 			return EXIT_FAILURE;
 		}
 
-		digests.push_back(DigestMD5(strDigest));
+		list.push_back({
+			std::make_unique<DigestMD5>(strDigest),
+			nullptr
+		});
 	}
 
 	// Default attacks
-	cracker.addAttack(std::make_shared<AttackBruteforce>("abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*", 8));
+	cracker.addAttack(std::make_shared<AttackBruteforce>("abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*", 6));
 
-	return cracker.crack(digests) ? EXIT_SUCCESS : EXIT_FAILURE;
+	return cracker.crack(list) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

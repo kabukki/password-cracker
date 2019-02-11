@@ -15,7 +15,7 @@ public:
 	DigestMD5(const DigestMD5& other);
 	~DigestMD5();
 
-	static DigestMD5			hash(const std::string &message);
+	static DigestMD5		hash(const std::string &message);
 	bool 					check(const std::string &password) const;
 	
 	const unsigned char*	raw() const;

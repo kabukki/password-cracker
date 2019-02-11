@@ -16,16 +16,10 @@ private:
 	std::string	strategyToString() const;
 
 public:
-	struct results {
-		bool							success;
-		std::unique_ptr<std::string>	password;
-		unsigned int					attempts;
-	};
-
 	Cracker();
 	~Cracker();
 
-	bool		crack(const std::vector<DigestMD5> digests);
+	bool		crack(std::vector<IAttack::pair>& list);
 	void		addAttack(std::shared_ptr<IAttack> attack);
 };
 

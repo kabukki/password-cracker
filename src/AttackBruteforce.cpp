@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <atomic>
 #include <vector>
@@ -41,16 +42,16 @@ std::string			AttackBruteforce::nthString(const size_t n)
 	return password;
 }
 
-void					AttackBruteforce::crack(const std::vector<DigestMD5> digests, std::vector<IAttack::results>& results)
+void					AttackBruteforce::crack(std::vector<IAttack::pair>& list)
 {
 	std::atomic<bool>	done(false);
-	size_t				resultsSizeBefore = results.size();
+	size_t				nbCrackedBefore = std::count_if(list.begin(), list.end(), [](IAttack::pair& pair) { return pair.isCracked(); });
 
 	_logger.log(description());
 	_logger.log(std::to_string(_possibilities) + " possibilities total");
 	_logger.log("Using " + std::to_string(NUM_THREADS) + " threads");
 
-	#pragma omp parallel shared(results) num_threads(NUM_THREADS)
+	#pragma omp parallel shared(list) num_threads(NUM_THREADS)
 	{
 		size_t start = omp_get_thread_num();
 		size_t step = omp_get_num_threads();
@@ -58,23 +59,21 @@ void					AttackBruteforce::crack(const std::vector<DigestMD5> digests, std::vect
 		for (size_t n = start; !done && n < _possibilities; n += step) {
 			std::string password = nthString(n);
 			
-			for (auto& digest : digests) {
-				if (digest.check(password)) {
-					_logger << Logger::SUCCESS << digest << " : " << Color::BOLD << password << Color::RESET << std::endl;
-					results.push_back(IAttack::results {
-						std::make_unique<DigestMD5>(digest),
-						std::make_unique<std::string>(password)
-					});
-				}
-				if (results.size() == digests.size()) {
-					done = true;
-					break;
+			for (auto& pair : list) {
+				if (pair.digest->check(password)) {
+					pair.password = std::make_unique<std::string>(password);
+					_logger << Logger::SUCCESS << "Found " << *(pair.digest) << " : " << Color::BOLD << password << Color::RESET << std::endl;
+					// If all digests have been cracked, end here.
+					if (std::all_of(list.begin(), list.end(), [](IAttack::pair& pair) { return pair.isCracked(); })) {
+						done = true;
+						break;
+					}
 				}
 			}
 		}	
 	}
 
-	if (results.size() - resultsSizeBefore == 0) {
+	if (std::count_if(list.begin(), list.end(), [](IAttack::pair& pair) { return pair.isCracked(); }) - nbCrackedBefore == 0) {
 		_logger.warn("Did not find any password");
 	}
 }
