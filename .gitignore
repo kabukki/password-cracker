@@ -3,3 +3,4 @@ crack
 .vscode/
 dictionaries/*.txt
 gmon.out
+*.zip
