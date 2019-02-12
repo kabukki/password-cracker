@@ -3,29 +3,22 @@
 #include <cstring>
 #include "DigestMD5.hpp"
 
-DigestMD5::DigestMD5(const std::string &digest)
+DigestMD5::DigestMD5(const std::string &digest) : ADigest(MD5_DIGEST_LENGTH)
 {
-	_digest = new unsigned char[MD5_DIGEST_LENGTH];
-
 	// Parse every 2 characters
 	for (size_t n = 0; n + 1 < digest.length(); n += 2) {
 		_digest[n / 2] = static_cast<unsigned char>(std::stoi(digest.substr(n, 2), nullptr, 16));
 	}
 }
-DigestMD5::DigestMD5(const unsigned char* digest)
+DigestMD5::DigestMD5(const unsigned char* digest) : ADigest(MD5_DIGEST_LENGTH)
 {
-	_digest = new unsigned char[MD5_DIGEST_LENGTH];
 	memcpy(_digest, digest, MD5_DIGEST_LENGTH);
 }
-DigestMD5::DigestMD5(const DigestMD5& other)
+DigestMD5::DigestMD5(const DigestMD5& other) : ADigest(MD5_DIGEST_LENGTH)
 {
-	_digest = new unsigned char[MD5_DIGEST_LENGTH];
 	memcpy(_digest, other._digest, MD5_DIGEST_LENGTH);
 }
-DigestMD5::~DigestMD5()
-{
-	delete[] _digest;
-}
+DigestMD5::~DigestMD5() {}
 
 /**
  * Hash a plain string to a digest
@@ -39,36 +32,11 @@ DigestMD5					DigestMD5::hash(const std::string &message)
 	return DigestMD5(digest);
 }
 
-const unsigned char*	DigestMD5::raw() const
-{
-	return _digest;
-}
-
 /**
  * Compare a plain string against a digest. First hashes the string, then compares the digests.
  */
-bool					DigestMD5::check(const std::string &password) const
+bool					DigestMD5::check(const std::string& password) const
 {
-	DigestMD5				digest = DigestMD5::hash(password);
-
-	return digest == *this;
+	// return true;
+	return ADigest::check(DigestMD5::hash(password));
 }
-
-const unsigned char&	DigestMD5::operator[](const size_t n) const
-{
-	return _digest[n];
-}
-
-bool					operator==(const DigestMD5& lhs, const DigestMD5& rhs)
-{
-	return std::memcmp(lhs.raw(), rhs.raw(), MD5_DIGEST_LENGTH) == 0;
-}
-
-std::ostream&			operator<<(std::ostream &os, const DigestMD5& digest)
-{
-	os << std::hex;
-	for (size_t n = 0; n < MD5_DIGEST_LENGTH; n++) {
-		os << std::setw(2) << std::setfill('0') << static_cast<unsigned int>(digest[n]);
-	}
-	return os << std::dec;
-};

@@ -5,7 +5,7 @@
 #include "IAttack.hpp"
 #include "Logger.hpp"
 
-#define NUM_THREADS	1
+#define NUM_THREADS	4
 
 class AttackBruteforce : public IAttack
 {
@@ -19,15 +19,15 @@ private:
 	std::map<size_t, size_t>	_pow;
 	size_t						_possibilities;
 
-	std::string					nthString(const size_t n);
+	std::string					nthString(const size_t n) const;
 
 public:
 	AttackBruteforce(const std::string &charset = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*", const size_t maxLength = 8);
 	~AttackBruteforce();
 	
-	void				crack(std::vector<IAttack::pair>& list) override;
-	const std::string&	name() override;
-	const std::string	description() override;
+	void						crack(std::vector<IAttack::pair>& list) const override;
+	const std::string&			name() const override;
+	const std::string			description() const override;
 };
 
 #endif

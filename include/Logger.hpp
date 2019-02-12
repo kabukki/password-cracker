@@ -20,16 +20,16 @@ public:
 		ERROR
 	};
 
-	void log(const std::string &message);
-	void success(const std::string &message);
-	void warn(const std::string &message);
-	void error(const std::string &message);
+	void log(const std::string &message) const;
+	void success(const std::string &message) const;
+	void warn(const std::string &message) const;
+	void error(const std::string &message) const;
 
 	std::ostream&		out() const;
 	const std::string&	name() const;
 };
 
-std::ostream & operator<<(Logger &logger, const Logger::symbol &symbol);
+std::ostream & operator<<(const Logger &logger, const Logger::symbol &symbol);
 // std::ostream & operator<<(Logger &logger, const std::string &message);
 
 #endif

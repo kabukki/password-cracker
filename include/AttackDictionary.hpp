@@ -15,9 +15,9 @@ public:
 	AttackDictionary(const std::string &dictionaryPath);
 	~AttackDictionary();
 	
-	void				crack(std::vector<IAttack::pair>& list) override;
-	const std::string&	name() override;
-	const std::string	description() override;
+	void				crack(std::vector<IAttack::pair>& list) const override;
+	const std::string&	name() const override;
+	const std::string	description() const override;
 };
 
 #endif

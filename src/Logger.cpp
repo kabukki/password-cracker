@@ -7,22 +7,22 @@ Logger::Logger(std::ostream &out, const std::string &name)
 {}
 Logger::~Logger() {}
 
-void Logger::log(const std::string &message)
+void Logger::log(const std::string &message) const
 {
 	*this << Logger::NEUTRAL << message << std::endl;
 }
 
-void Logger::success(const std::string &message)
+void Logger::success(const std::string &message) const
 {
 	*this << Logger::SUCCESS << message << std::endl;
 }
 
-void Logger::warn(const std::string &message)
+void Logger::warn(const std::string &message) const
 {
 	*this << Logger::WARNING << message << std::endl;
 }
 
-void Logger::error(const std::string &message)
+void Logger::error(const std::string &message) const
 {
 	*this << Logger::ERROR << message << std::endl;
 }
@@ -37,7 +37,7 @@ const std::string&	Logger::name() const
 	return _name;
 }
 
-std::ostream & operator<<(Logger &logger, const Logger::symbol &symbol)
+std::ostream & operator<<(const Logger &logger, const Logger::symbol &symbol)
 {
 	switch (symbol) {
 		case Logger::NEUTRAL:

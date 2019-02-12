@@ -5,7 +5,6 @@
 #include <vector>
 #include "IAttack.hpp"
 #include "Logger.hpp"
-#include "DigestMD5.hpp"
 
 class Cracker
 {

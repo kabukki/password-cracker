@@ -4,26 +4,21 @@
 #include <string>
 #include <memory>
 #include <vector>
-#include "DigestMD5.hpp"
+#include "ADigest.hpp"
 
 class IAttack
 {
 public:
-	struct results {
-		std::unique_ptr<DigestMD5>		digest;
-		std::unique_ptr<std::string>	password;
-	};
-
 	struct pair {
-		std::unique_ptr<DigestMD5>		digest;
+		std::unique_ptr<ADigest>		digest;
 		std::unique_ptr<std::string>	password;
 
 		bool							isCracked() const { return password != nullptr; }
 	};
 
-	virtual void				crack(std::vector<IAttack::pair>& list) = 0;
-	virtual const std::string&	name() = 0;
-	virtual const std::string	description() = 0;
+	virtual void						crack(std::vector<IAttack::pair>& list) const = 0;
+	virtual const std::string&			name() const = 0;
+	virtual const std::string			description() const = 0;
 };
 
 #endif

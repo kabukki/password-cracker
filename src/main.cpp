@@ -25,6 +25,9 @@ int								main(int argc, char **argv)
 	Cracker 					cracker;
 	int							c;
 
+	// DigestMD5 h = DigestMD5::hash("bite");
+	// std::cout << h << std::endl;
+
 	// Parse arguments to add appropriate attacks
 	while ((c = getopt(argc, argv, "hd:")) != -1) {
 		switch (c) {
@@ -32,7 +35,6 @@ int								main(int argc, char **argv)
 				usage(argv[0]);
 				return EXIT_FAILURE;
 			case 'd':
-				// cracker.addAttack(std::make_shared<AttackDictionary>("dictionaries/mots-8-et-moins.txt"));
 				cracker.addAttack(std::make_shared<AttackDictionary>(optarg));
 				break;
 			default:
@@ -49,7 +51,7 @@ int								main(int argc, char **argv)
 			return EXIT_FAILURE;
 		}
 
-		list.push_back({
+		list.emplace_back(IAttack::pair {
 			std::make_unique<DigestMD5>(strDigest),
 			nullptr
 		});

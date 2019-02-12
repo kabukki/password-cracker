@@ -9,7 +9,7 @@ AttackDictionary::AttackDictionary(const std::string &dictionaryPath)
 {}
 AttackDictionary::~AttackDictionary() {}
 
-void				AttackDictionary::crack(std::vector<IAttack::pair>& list)
+void				AttackDictionary::crack(std::vector<IAttack::pair>& list) const
 {
 	std::ifstream	dictionary(_dictionaryPath);
 	size_t			nbCrackedBefore = std::count_if(list.begin(), list.end(), [](IAttack::pair& pair) { return pair.isCracked(); });
@@ -23,7 +23,7 @@ void				AttackDictionary::crack(std::vector<IAttack::pair>& list)
 		while (!done && std::getline(dictionary, password)) {
 			for (auto& pair : list) {
 				if (pair.digest->check(password)) {
-					_logger << Logger::SUCCESS << *(pair.digest) << " : " << Color::BOLD << password << Color::RESET << std::endl;
+					// _logger << Logger::SUCCESS << *(pair.digest) << " : " << Color::BOLD << password << Color::RESET << std::endl;
 					pair.password = std::make_unique<std::string>(password);
 					// If all digests have been cracked, end here.
 					if (std::all_of(list.begin(), list.end(), [](IAttack::pair& pair) { return pair.isCracked(); })) {
@@ -43,12 +43,12 @@ void				AttackDictionary::crack(std::vector<IAttack::pair>& list)
 	}
 }
 
-const std::string&	AttackDictionary::name()
+const std::string&	AttackDictionary::name() const
 {
 	return _name;
 }
 
-const std::string	AttackDictionary::description()
+const std::string	AttackDictionary::description() const
 {
 	return "Dictionary fetched from file: " + _dictionaryPath;
 }
